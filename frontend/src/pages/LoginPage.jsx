@@ -1,69 +1,75 @@
 import React, { useState } from "react";
-import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate(); // Hook to navigate programmatically
 
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:5000/api/auth/login", { email, password });
-      alert(response.data.message);
+      const response = await fetch("http://localhost:5000/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+      const data = await response.json();
+      if (response.ok) {
+        alert("Login successful!");
+        navigate("/"); // Navigate to the main page
+      } else {
+        alert(data.message || "Login failed");
+      }
     } catch (error) {
-      alert(error.response?.data?.message || "Login failed");
+      console.error("Error logging in:", error);
     }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-sky-200 via-sky-300 to-white">
-      <div className="bg-white shadow-xl rounded-lg p-8 w-full max-w-md">
-        <h2 className="text-3xl font-semibold text-center text-sky-600 mb-8">Welcome Back!</h2>
-        <form onSubmit={handleLogin} className="space-y-6">
-          <div>
-            <label className="block text-gray-700 font-semibold mb-2" htmlFor="email">
-              Email Address
+    <div className="flex items-center justify-center h-screen bg-gradient-to-br from-sky-200 via-sky-300 to-white">
+      <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-lg">
+        <h2 className="text-2xl font-bold text-center text-gray-800">Login</h2>
+        <form className="mt-6" onSubmit={handleLogin}>
+          <div className="mb-4">
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+              Email
             </label>
             <input
               id="email"
               type="email"
-              placeholder="Enter your email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="block w-full px-4 py-3 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-600"
+              className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring focus:ring-sky-300"
             />
           </div>
-
-          <div>
-            <label className="block text-gray-700 font-semibold mb-2" htmlFor="password">
+          <div className="mb-4">
+            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
               Password
             </label>
             <input
               id="password"
               type="password"
-              placeholder="Enter your password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="block w-full px-4 py-3 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-600"
+              className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring focus:ring-sky-300"
             />
           </div>
-
-          <div>
-            <button type="submit" className="w-full py-3 bg-sky-600 text-white rounded-md shadow-lg hover:bg-sky-700 focus:outline-none">
-              Log In
-            </button>
-          </div>
-          
-          <div className="text-center mt-4">
-            Don't have an account?
-            <br></br>
-            <a href="/signup" className="text-sky-600 hover:underline text-sm">
-               Signup
-            </a>
-          </div>
+          <button
+            type="submit"
+            className="w-full py-2 mt-4 text-white bg-sky-600 rounded-md hover:bg-sky-700"
+          >
+            Login
+          </button>
         </form>
+        <p className="mt-4 text-sm text-center text-gray-600">
+          Don't have an account?{" "}
+          <a href="/signup" className="text-sky-600 hover:underline">
+            Sign up
+          </a>
+        </p>
       </div>
     </div>
   );

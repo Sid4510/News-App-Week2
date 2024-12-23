@@ -4,9 +4,7 @@ import './App.css'; // Tailwind styles should be included here
 import LoginPage from './pages/LoginPage';
 import Signup from './pages/Signup';
 import HomePage from './pages/HomePage';
-import Navbar from './components/Navbar';
-import Footer from './components/Footer';
-import SubscribePage from './pages/SubsribePage';
+import SubscribePage from './pages/SubscribePage';
 
 function App() {
   return (
