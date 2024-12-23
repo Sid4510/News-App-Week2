@@ -5,9 +5,11 @@ import LoginPage from './pages/LoginPage';
 import Signup from './pages/Signup';
 import HomePage from './pages/HomePage';
 import SubscribePage from './pages/SubscribePage';
+import { UserProvider } from './context/userContext';
 
 function App() {
   return (
+    <UserProvider>
     <Router>
       <div>
         {/* Main Content */}
@@ -19,6 +21,7 @@ function App() {
         </Routes>
       </div>
     </Router>
+    </UserProvider>
   );
 }
 

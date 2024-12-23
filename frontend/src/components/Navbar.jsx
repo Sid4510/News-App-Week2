@@ -1,6 +1,17 @@
-import React from 'react';
+// src/components/Navbar.js
+import React, { useContext } from 'react';
+import { UserContext } from '../context/userContext';
+import { useNavigate } from 'react-router-dom';
 
 const Navbar = () => {
+  const { user, logout } = useContext(UserContext);
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login");  // Redirect to login page after logout
+  };
+
   return (
     <nav className="bg-white shadow-sm">
       {/* Top Bar */}
@@ -59,18 +70,29 @@ const Navbar = () => {
 
           {/* Action Buttons */}
           <div className="flex items-center space-x-4">
-            <a
-              href="/subscribe"
-              className="px-4 py-2 text-sm font-semibold text-blue-700 border border-blue-700 rounded hover:bg-blue-100"
-            >
-              Subscribe
-            </a>
-            <a
-              href="/login"
-              className="px-4 py-2 text-sm font-semibold text-white bg-blue-700 rounded hover:bg-blue-800"
-            >
-              Log In
-            </a>
+            {!user ? (
+              <>
+                <a
+                  href="/subscribe"
+                  className="px-4 py-2 text-sm font-semibold text-blue-700 border border-blue-700 rounded hover:bg-blue-100"
+                >
+                  Subscribe
+                </a>
+                <a
+                  href="/login"
+                  className="px-4 py-2 text-sm font-semibold text-white bg-blue-700 rounded hover:bg-blue-800"
+                >
+                  Log In
+                </a>
+              </>
+            ) : (
+              <button
+                onClick={handleLogout}
+                className="px-4 py-2 text-sm font-semibold text-white bg-red-700 rounded hover:bg-red-800"
+              >
+                Log Out
+              </button>
+            )}
           </div>
         </div>
       </div>

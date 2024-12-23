@@ -1,7 +1,24 @@
-import React from 'react';
-import { Link } from 'react-router-dom'; // Import Link from React Router
+import React, { useContext, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom'; // Import Link and useNavigate from React Router
+import { UserContext } from '../context/userContext'; // Import your UserContext
 
 const LeftColumn = ({ articles }) => {
+  const { user } = useContext(UserContext); // Access user state from context
+  const navigate = useNavigate();
+  const [showLoginDialog, setShowLoginDialog] = useState(false); // State to manage the LoginDialog visibility
+
+  const handleReadMoreClick = (articleTitle) => {
+    if (!user) {
+      setShowLoginDialog(true); // If the user is not logged in, show LoginDialog
+    } else {
+      navigate(`/articles/${articleTitle.replace(/\s+/g, '-').toLowerCase()}`); // Navigate to the article page
+    }
+  };
+
+  const handleCloseLoginDialog = () => {
+    setShowLoginDialog(false); // Close the LoginDialog
+  };
+
   return (
     <div className="space-y-6">
       {articles.map((article, index) => (
@@ -9,40 +26,65 @@ const LeftColumn = ({ articles }) => {
           {/* Left Side: Article Information */}
           <div className="flex-1">
             {/* Clickable Article Title */}
-            <Link
-              to={`/articles/${article.title.replace(/\s+/g, '-').toLowerCase()}`} // Dynamically generate URL
-              className="text-xl font-semibold text-gray-900 hover:text-sky-600"
+            <button
+              onClick={() => handleReadMoreClick(article.title)} // Trigger the login check on title click
+              className="text-xl font-semibold text-gray-900 hover:text-sky-600 w-full text-left"
             >
               {article.title}
-            </Link>
+            </button>
             <p className="text-gray-700 mt-2">
               {article.description.length > 100
                 ? `${article.description.substring(0, 300)}...`
                 : article.description}
             </p>
             {/* "Read More" link */}
-            <Link
-              to={`/articles/${article.title.replace(/\s+/g, '-').toLowerCase()}`} // Link to article page
+            <button
+              onClick={() => handleReadMoreClick(article.title)} // Trigger the login check on "Read More" button click
               className="text-sky-600 hover:text-sky-800 mt-4 inline-block"
             >
               Read More
-            </Link>
+            </button>
           </div>
 
           {/* Right Side: Clickable Image */}
           <div className="flex-1 h-auto">
-            <Link
-              to={`/articles/${article.title.replace(/\s+/g, '-').toLowerCase()}`} // Link to article page
+            <button
+              onClick={() => handleReadMoreClick(article.title)} // Trigger the login check on image click
+              className="w-full h-full"
             >
               <img
                 src={article.image}
                 alt={article.title}
                 className="w-full h-full object-cover rounded-md shadow-sm"
               />
-            </Link>
+            </button>
           </div>
         </div>
       ))}
+
+      {/* Login Dialog - Modal to prompt user to log in */}
+      {showLoginDialog && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-80">
+            <h2 className="text-xl font-semibold text-gray-800">Login Required</h2>
+            <p className="text-gray-700 mt-4">You need to be logged in to read the article.</p>
+            <div className="mt-6 flex justify-between">
+              <button
+                onClick={handleCloseLoginDialog}
+                className="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600"
+              >
+                Close
+              </button>
+              <Link
+                to="/login"
+                className="px-4 py-2 bg-sky-600 text-white rounded-md hover:bg-sky-700"
+              >
+                Login
+              </Link>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
