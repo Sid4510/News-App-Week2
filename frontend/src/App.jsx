@@ -6,6 +6,8 @@ import Signup from './pages/Signup';
 import HomePage from './pages/HomePage';
 import SubscribePage from './pages/SubscribePage';
 import { UserProvider } from './context/userContext';
+import MyAccount from './components/MyAccount';
+import NewsDescription from './pages/NewsDescription';
 
 function App() {
   return (
@@ -17,7 +19,9 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<Signup />} />
-          <Route path='/subscribe' element={<SubscribePage/>}/>
+          <Route path='/subscribe' element={<SubscribePage/>} />
+          <Route path='/myaccount' element={<MyAccount/>} />
+          <Route path='/news' element={<NewsDescription/>} />
         </Routes>
       </div>
     </Router>

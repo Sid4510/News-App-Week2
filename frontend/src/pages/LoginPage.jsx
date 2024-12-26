@@ -1,19 +1,19 @@
 import React, { useState, useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { UserContext } from "../context/userContext";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);  // Add loading state
-  const [error, setError] = useState("");  // Add error state
-  const { login } = useContext(UserContext);  // Access login function from context
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const { login } = useContext(UserContext);
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setLoading(true);  // Set loading to true when login starts
-    setError("");  // Clear any previous errors
+    setLoading(true);
+    setError("");
 
     try {
       const response = await fetch("http://localhost:5000/api/auth/login", {
@@ -24,17 +24,17 @@ const LoginPage = () => {
       const data = await response.json();
 
       if (response.ok) {
-        login(data.token);  // Store the token in context
-        alert("Login successful!");
-        navigate("/");  // Navigate to the home page
+        login(data.token, data.name); // Pass token and name (username)
+        alert(`Welcome, ${data.name}!`);
+        navigate("/"); // Redirect to home page
       } else {
-        setError(data.message || "Login failed");  // Set error state if login fails
+        setError(data.message || "Login failed");
       }
-    } catch (error) {
-      console.error("Error logging in:", error);
-      setError("An error occurred. Please try again later.");  // Set error state for network errors
+    } catch (err) {
+      console.error("Error logging in:", err);
+      setError("An error occurred. Please try again later.");
     } finally {
-      setLoading(false);  // Set loading to false when the request finishes
+      setLoading(false);
     }
   };
 
@@ -42,7 +42,7 @@ const LoginPage = () => {
     <div className="flex items-center justify-center h-screen bg-gradient-to-br from-sky-200 via-sky-300 to-white">
       <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-lg">
         <h2 className="text-2xl font-bold text-center text-gray-800">Login</h2>
-        {error && <p className="text-red-500 text-center mt-2">{error}</p>} {/* Display error message */}
+        {error && <p className="text-red-500 text-center mt-2">{error}</p>}
         <form className="mt-6" onSubmit={handleLogin}>
           <div className="mb-4">
             <label htmlFor="email" className="block text-sm font-medium text-gray-700">
@@ -73,16 +73,19 @@ const LoginPage = () => {
           <button
             type="submit"
             className="w-full py-2 mt-4 text-white bg-sky-600 rounded-md hover:bg-sky-700"
-            disabled={loading}  // Disable button while loading
+            disabled={loading}
           >
-            {loading ? "Logging In..." : "Login"}  {/* Show loading text */}
+            {loading ? "Logging In..." : "Login"}
           </button>
         </form>
         <p className="mt-4 text-sm text-center text-gray-600">
           Don't have an account?{" "}
-          <a href="/signup" className="text-sky-600 hover:underline">
-            Sign up
-          </a>
+          <Link
+            to="/signup"
+            className="text-sky-600 hover:underline"
+          >
+            Sign Up
+          </Link>
         </p>
       </div>
     </div>

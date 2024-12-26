@@ -1,25 +1,38 @@
 import React, { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
 
 const Signup = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleSignup = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setError("");
+
     try {
       const response = await fetch("http://localhost:5000/api/auth/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ name, email, password }),
       });
       const data = await response.json();
+
       if (response.ok) {
-        alert("Signup successful!");
+        alert("Signup successful! Please log in.");
+        navigate("/login"); // Redirect to login page after signup
       } else {
-        alert(data.message || "Signup failed");
+        setError(data.message || "Signup failed");
       }
     } catch (error) {
       console.error("Error signing up:", error);
+      setError("An error occurred. Please try again later.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -27,7 +40,21 @@ const Signup = () => {
     <div className="flex items-center justify-center h-screen bg-gradient-to-br from-sky-200 via-sky-300 to-white">
       <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-lg">
         <h2 className="text-2xl font-bold text-center text-gray-800">Sign Up</h2>
+        {error && <p className="text-red-500 text-center mt-2">{error}</p>}
         <form className="mt-6" onSubmit={handleSignup}>
+          <div className="mb-4">
+            <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+              Username
+            </label>
+            <input
+              id="name"
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+              className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring focus:ring-sky-300"
+            />
+          </div>
           <div className="mb-4">
             <label htmlFor="email" className="block text-sm font-medium text-gray-700">
               Email
@@ -57,15 +84,16 @@ const Signup = () => {
           <button
             type="submit"
             className="w-full py-2 mt-4 text-white bg-sky-600 rounded-md hover:bg-sky-700"
+            disabled={loading}
           >
-            Sign Up
+            {loading ? "Signing Up..." : "Sign Up"}
           </button>
         </form>
         <p className="mt-4 text-sm text-center text-gray-600">
           Already have an account?{" "}
-          <a href="/login" className="text-sky-600 hover:underline">
+          <Link to="/login" className="text-sky-600 hover:underline">
             Login
-          </a>
+          </Link>
         </p>
       </div>
     </div>
