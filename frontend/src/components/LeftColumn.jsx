@@ -7,6 +7,13 @@ const LeftColumn = ({ articles }) => {
   const navigate = useNavigate();
   const [showLoginDialog, setShowLoginDialog] = useState(false);
 
+  // Remove duplicate articles based on title and filter articles without images
+  const uniqueArticles = articles
+    .filter((article, index, self) => 
+      self.findIndex((a) => a.title === article.title) === index // Remove duplicates based on title
+    )
+    .filter((article) => article.urlToImage); // Exclude articles without images
+
   const formatTitleToSlug = (title) => title.replace(/\s+/g, '-').toLowerCase();
 
   const handleReadMoreClick = (article) => {
@@ -16,31 +23,31 @@ const LeftColumn = ({ articles }) => {
       navigate(`/news/${formatTitleToSlug(article.title)}`, { state: { article } });
     }
   };
-  
 
-  // Function to limit description to a certain number of words
-  const limitDescription = (description, wordLimit = 30) => {
-    if (!description) return 'No description available.';
-    const words = description.split(' ');
-    return words.length > wordLimit ? words.slice(0, wordLimit).join(' ') + '...' : description;
+  const truncateDescription = (description) => {
+    return description
+      ? description.length > 150
+        ? `${description.substring(0, 150)}...`
+        : description
+      : 'No description available.';
   };
 
   return (
     <div className="space-y-6">
-      {articles.map((article, index) => (
+      {uniqueArticles.map((article, index) => (
         <div key={index} className="flex items-start space-x-4 p-4 border-b border-gray-300">
           <div className="flex-1">
             <button
-              onClick={() => handleReadMoreClick(article.title || 'Untitled')}
+              onClick={() => handleReadMoreClick(article)}
               className="text-xl font-semibold text-gray-900 hover:text-sky-600 w-full text-left"
             >
               {article.title || 'Untitled Article'}
             </button>
             <p className="text-gray-700 mt-2">
-              {limitDescription(article.description)}  {/* Limited description */}
+              {truncateDescription(article.description)}
             </p>
             <button
-              onClick={() => handleReadMoreClick(article.title || 'Untitled')}
+              onClick={() => handleReadMoreClick(article)}
               className="text-sky-600 hover:text-sky-800 mt-4 inline-block"
             >
               Read More
@@ -48,11 +55,11 @@ const LeftColumn = ({ articles }) => {
           </div>
           <div className="flex-1 h-auto">
             <button
-              onClick={() => handleReadMoreClick(article || 'Untitled')}
+              onClick={() => handleReadMoreClick(article)}
               className="w-full h-full"
             >
               <img
-                src={article.urlToImage || '/placeholder-image.jpg'} 
+                src={article.urlToImage || '/placeholder-image.jpg'}
                 alt={article.title || 'Untitled'}
                 className="w-full h-full object-cover rounded-md shadow-sm"
               />

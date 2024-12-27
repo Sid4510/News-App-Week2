@@ -21,7 +21,7 @@ function App() {
           <Route path="/signup" element={<Signup />} />
           <Route path='/subscribe' element={<SubscribePage/>} />
           <Route path='/myaccount' element={<MyAccount/>} />
-          <Route path='/news' element={<NewsDescription/>} />
+          <Route path='/news/:slug' element={<NewsDescription/>} />
         </Routes>
       </div>
     </Router>

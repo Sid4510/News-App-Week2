@@ -1,43 +1,59 @@
-import React, { useContext, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { UserContext } from '../context/userContext';
+import React, { useContext, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { UserContext } from "../context/userContext";
 
 const RightColumn = ({ articles }) => {
   const { user } = useContext(UserContext);
   const navigate = useNavigate();
   const [showLoginDialog, setShowLoginDialog] = useState(false);
 
-  const formatTitleToSlug = (title) => title.replace(/\s+/g, '-').toLowerCase();
+  // Remove duplicate articles based on title and filter articles without images
+  const uniqueArticles = articles
+    .filter(
+      (article, index, self) =>
+        self.findIndex((a) => a.title === article.title) === index // Remove duplicates based on title
+    )
+    .filter((article) => article.urlToImage); // Exclude articles without images
+
+  const formatTitleToSlug = (title) => title.replace(/\s+/g, "-").toLowerCase();
 
   const handleReadMoreClick = (article) => {
     if (!user) {
       setShowLoginDialog(true);
     } else {
-      navigate(`/articles/${formatTitleToSlug(article.title)}`, { state: { article } });
+      navigate(`/news/${formatTitleToSlug(article.title)}`, {
+        state: { article },
+      });
     }
   };
-  
+
+  const truncateDescription = (description) => {
+    return description
+      ? description.length > 50
+        ? `${description.substring(0, 50)}...`
+        : description
+      : "No description available.";
+  };
 
   return (
     <div className="space-y-6">
-      {articles.map((article, index) => (
-        <div key={index} className="flex items-start space-x-4 p-4 border-b border-gray-300">
+      {uniqueArticles.map((article, index) => (
+        <div
+          key={index}
+          className="flex items-start space-x-4 p-4 border-b border-gray-300"
+        >
           <div className="flex-1">
             <button
-              onClick={() => handleReadMoreClick(article.title || 'Untitled')}
-              className="text-sm font-semibold text-gray-900 hover:text-sky-600 w-full text-left" // Changed from text-lg to text-sm
+              onClick={() => handleReadMoreClick(article)}
+              className="text-sm font-semibold text-gray-900 hover:text-sky-600 w-full text-left"
             >
-              {article.title || 'Untitled Article'}
+              {article.title || "Untitled Article"}
             </button>
-            <p className="text-gray-700 mt-2">
-              {article.description
-                ? article.description.length > 50
-                  ? `${article.description.substring(0, 50)}...`
-                  : article.description
-                : 'No description available.'}
+            <p className="text-gray-700 mt-2 text-sm">
+              {truncateDescription(article.description)}
             </p>
             <button
-              onClick={() => handleReadMoreClick(article.title || 'Untitled')}
+              onClick={() => handleReadMoreClick(article)}
               className="text-sky-600 hover:text-sky-800 mt-4 inline-block"
             >
               Read More
@@ -45,12 +61,12 @@ const RightColumn = ({ articles }) => {
           </div>
           <div className="flex-shrink-0 w-full sm:w-40 h-auto mt-4 sm:mt-0">
             <button
-              onClick={() => handleReadMoreClick(article.title || 'Untitled')}
+              onClick={() => handleReadMoreClick(article)}
               className="w-full h-full"
             >
               <img
-                src={article.urlToImage || '/placeholder-image.jpg'}
-                alt={article.title || 'Untitled'}
+                src={article.urlToImage || "/placeholder-image.jpg"}
+                alt={article.title || "Untitled"}
                 className="w-full h-auto sm:h-full object-cover rounded-md shadow-sm"
               />
             </button>
@@ -61,8 +77,12 @@ const RightColumn = ({ articles }) => {
       {showLoginDialog && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-6 rounded-lg shadow-lg w-80">
-            <h2 className="text-xl font-semibold text-gray-800">Login Required</h2>
-            <p className="text-gray-700 mt-4">You need to be logged in to read the article.</p>
+            <h2 className="text-xl font-semibold text-gray-800">
+              Login Required
+            </h2>
+            <p className="text-gray-700 mt-4">
+              You need to be logged in to read the article.
+            </p>
             <div className="mt-6 flex justify-between">
               <button
                 onClick={() => setShowLoginDialog(false)}

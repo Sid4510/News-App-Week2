@@ -1,64 +1,111 @@
-import React, { useState, useEffect } from 'react';
-import LeftColumn from '../components/LeftColumn';
-import RightColumn from '../components/RightColumn';
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
-import InfiniteScroll from 'react-infinite-scroll-component';
+import React, { useState, useEffect } from "react";
+import LeftColumn from "../components/LeftColumn";
+import RightColumn from "../components/RightColumn";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 const HomePage = () => {
   const [leftArticles, setLeftArticles] = useState([]);
   const [rightArticles, setRightArticles] = useState([]);
+  const [searchResults, setSearchResults] = useState(null);
   const [error, setError] = useState(null);
-  const [page, setPage] = useState(1); // For pagination
-  const [hasMore, setHasMore] = useState(true); // For checking if there are more articles
+  const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const maxPages = 10;
 
   // Fetch data from NewsAPI
   useEffect(() => {
+    if (searchResults) return; // Skip fetching articles if search results are displayed
+
     const fetchArticles = async () => {
+      if (loading) return;
+
+      setLoading(true);
+
       try {
+        if (page > maxPages) {
+          return;
+        }
+
         const response = await fetch(
-          `https://newsapi.org/v2/top-headlines?apiKey=c0bb3f50e6eb46d3abd4c165e6d5edcf&country=us&pageSize=6&page=${page}`
+          `https://newsapi.org/v2/top-headlines?apiKey=dda527c7b3a0481c8af865b033daecf1&country=us&pageSize=6&page=${page}`
         );
         const data = await response.json();
 
         if (response.ok) {
           const articles = data.articles;
 
-          // Separate articles for LeftColumn and RightColumn
-          setLeftArticles((prevLeftArticles) => [
-            ...prevLeftArticles,
-            ...articles.slice(0, 3), // First 3 articles for LeftColumn
-          ]);
-          setRightArticles((prevRightArticles) => [
-            ...prevRightArticles,
-            ...articles.slice(3, 6), // Next 3 articles for RightColumn
-          ]);
+          setPage((prevPage) => prevPage + 1);
 
-          // If less than 6 articles, stop infinite scroll
-          if (articles.length < 6) {
-            setHasMore(false);
-          }
+          setLeftArticles((prevLeftArticles) => {
+            const leftCount = prevLeftArticles.length;
+            const rightCount = rightArticles.length;
+
+            if (leftCount <= rightCount) {
+              return [...prevLeftArticles, ...articles];
+            }
+
+            return prevLeftArticles;
+          });
+
+          setRightArticles((prevRightArticles) => {
+            const leftCount = leftArticles.length;
+            const rightCount = prevRightArticles.length;
+
+            if (rightCount < leftCount) {
+              return [...prevRightArticles, ...articles];
+            }
+
+            return prevRightArticles;
+          });
         } else {
-          throw new Error(data.message || 'Failed to fetch articles');
+          throw new Error(data.message || "Failed to fetch articles");
         }
       } catch (err) {
         setError(err.message);
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchArticles();
-  }, [page]); // Runs whenever the page changes
+  }, [page, searchResults]);
 
   const fetchData = () => {
-    setPage((prevPage) => prevPage + 1); // Increase page number to fetch next set of data
+    if (!loading && page <= maxPages) {
+      setPage((prevPage) => prevPage + 1);
+    }
   };
+
+  // Distribute search results between columns
+  const distributeSearchResults = (results) => {
+    const leftResults = [];
+    const rightResults = [];
+
+    results.forEach((article, index) => {
+      if (index % 2 === 0) {
+        leftResults.push(article);
+      } else {
+        rightResults.push(article);
+      }
+    });
+
+    setLeftArticles(leftResults);
+    setRightArticles(rightResults);
+  };
+
+  useEffect(() => {
+    if (searchResults) {
+      distributeSearchResults(searchResults);
+    }
+  }, [searchResults]);
 
   return (
     <div className="min-h-screen bg-gray-100">
-      <Navbar />
+      <Navbar setSearchResults={setSearchResults} />
       <main className="bg-white p-6">
         <div className="mx-auto max-w-6xl grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Left column - spans 2 columns on md and up */}
           <div className="md:col-span-2 space-y-6">
             {error ? (
               <p className="text-red-500 text-center">{error}</p>
@@ -69,7 +116,6 @@ const HomePage = () => {
             )}
           </div>
 
-          {/* Right column with vertical border */}
           <div className="space-y-6 border-l border-gray-300 pl-6">
             {error ? (
               <p className="text-red-500 text-center">{error}</p>
@@ -81,14 +127,15 @@ const HomePage = () => {
           </div>
         </div>
 
-        {/* Infinite Scroll Component */}
-        <InfiniteScroll
-          dataLength={leftArticles.length + rightArticles.length} // Total length of articles
-          next={fetchData} // Function to fetch more data
-          hasMore={hasMore} // Condition to stop fetching more data
-          loader={<p>Loading...</p>} // Loading message while fetching more data
-          endMessage={<p className="text-center text-gray-500">No more articles to load</p>} // End message
-        />
+        {!searchResults && (
+          <InfiniteScroll
+            dataLength={leftArticles.length + rightArticles.length}
+            next={fetchData}
+            hasMore={page <= maxPages}
+            loader={<p>Loading...</p>}
+            endMessage={<p className="text-center text-gray-500">No more articles to load</p>}
+          />
+        )}
       </main>
       <Footer />
     </div>
