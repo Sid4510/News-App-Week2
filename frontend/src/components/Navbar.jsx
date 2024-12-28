@@ -21,7 +21,7 @@ const Navbar = ({ setSearchResults }) => {
     if (searchQuery.trim()) {
       try {
         const response = await fetch(
-          `https://newsapi.org/v2/everything?apiKey=dda527c7b3a0481c8af865b033daecf1&q=${encodeURIComponent(
+          `https://newsapi.org/v2/everything?apiKey=a335eff70cd44942a490d63bf0f3bc9a&q=${encodeURIComponent(
             searchQuery
           )}`
         );
