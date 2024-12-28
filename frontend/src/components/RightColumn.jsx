@@ -45,7 +45,7 @@ const RightColumn = ({ articles }) => {
           <div className="flex-1">
             <button
               onClick={() => handleReadMoreClick(article)}
-              className="text-sm font-semibold text-gray-900 hover:text-sky-600 w-full text-left"
+              className="text-sm font-semibold text-gray-900 hover:text-hover w-full text-left"
             >
               {article.title || "Untitled Article"}
             </button>

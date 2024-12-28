@@ -14,6 +14,7 @@ module.exports = {
         nav: "#404044",
         background: "#f8f9fa",
         text: "#212529",
+        hover: '#a32020'
 
       },
     },

@@ -57,7 +57,7 @@ const Navbar = ({ setSearchResults }) => {
               day: "numeric",
             })}
           </span>
-          <a href="#" className="underline hover:text-gray-800">
+          <a href="#" className="underline hover:text-red-400">
             Today's Paper
           </a>
         </div>

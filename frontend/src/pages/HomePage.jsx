@@ -29,7 +29,7 @@ const HomePage = () => {
         }
 
         const response = await fetch(
-          `https://newsapi.org/v2/top-headlines?apiKey=dda527c7b3a0481c8af865b033daecf1&country=us&pageSize=6&page=${page}`
+          `https://newsapi.org/v2/top-headlines?apiKey=cae26a7ec47b4b708682e1fe28070e22&country=us&pageSize=6&page=${page}`
         );
         const data = await response.json();
 

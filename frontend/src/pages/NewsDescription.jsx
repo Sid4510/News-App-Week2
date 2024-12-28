@@ -67,7 +67,7 @@ const NewsDescription = () => {
         <div className="px-6 md:px-72 mx-auto bg-white shadow-lg rounded-md overflow-hidden">
           {/* News Title */}
           <div className="py-6">
-            <h1 className="text-4xl font-bold text-gray-800 mb-4">
+            <h1 className="text-4xl font-bold text-gray-800 mb-4 hover:text-red-400">
               {news.title || "Untitled Article"}
             </h1>
             <p className="text-gray-600 text-sm mb-2">
