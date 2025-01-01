@@ -1,12 +1,13 @@
-import React, { useContext, useState } from "react";
-import { UserContext } from "../context/userContext";
+import { useState, useContext } from "react";
+import { UserContext } from "../context/UserContext"; // Assuming your context is in the right path
 import { useNavigate } from "react-router-dom";
+import { FaSearch } from "react-icons/fa"; // For search icon
 
 const Navbar = ({ setSearchResults }) => {
   const { user, logout } = useContext(UserContext);
   const navigate = useNavigate();
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState(""); // For search input
 
   const handleLogout = () => {
     logout();
@@ -17,13 +18,11 @@ const Navbar = ({ setSearchResults }) => {
     setDropdownOpen(!dropdownOpen);
   };
 
-  const handleSearch = async () => {
-    if (searchQuery.trim()) {
+  const handleSearch = async (query) => {
+    if (query.trim()) {
       try {
         const response = await fetch(
-          `https://newsapi.org/v2/everything?apiKey=a335eff70cd44942a490d63bf0f3bc9a&q=${encodeURIComponent(
-            searchQuery
-          )}`
+          `https://newsapi.org/v2/everything?apiKey=a335eff70cd44942a490d63bf0f3bc9a&q=${encodeURIComponent(query)}`
         );
         const data = await response.json();
 
@@ -39,9 +38,8 @@ const Navbar = ({ setSearchResults }) => {
   };
 
   const handleCategoryClick = (category) => {
-    setSearchQuery(category); // Set search query to the selected category
-    setSearchResults(null); // Reset search results when category is clicked
-    handleSearch(); // Perform the search operation using the selected category
+    setSearchQuery(category); // Set the category as the search query
+    handleSearch(category); // Perform search automatically for the selected category
   };
 
   return (
@@ -146,10 +144,10 @@ const Navbar = ({ setSearchResults }) => {
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
               <button
-                onClick={handleSearch}
+                onClick={() => handleSearch(searchQuery)} // Trigger search when clicked
                 className="px-4 py-2 bg-blue-700 text-white rounded-r-lg hover:bg-blue-800 focus:ring focus:ring-blue-300"
               >
-                Search
+                <FaSearch />
               </button>
             </div>
           </div>

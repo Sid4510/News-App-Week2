@@ -1,3 +1,4 @@
+require("dotenv").config(); // Load environment variables
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
@@ -52,12 +53,23 @@ app.get("/fetch-article", async (req, res) => {
 });
 
 // Database connection
+const mongoURI = process.env.MONGO_URI; // MongoDB URI from environment variable
+if (!mongoURI) {
+  console.error("MongoDB connection URI is missing. Add MONGO_URI in your .env file.");
+  process.exit(1); // Exit the app if no URI is provided
+}
+
 mongoose
-  .connect("mongodb://127.0.0.1:27017/Sid")
+  .connect(mongoURI)
   .then(() => console.log("MongoDB connected"))
-  .catch((err) => console.error("MongoDB connection error:", err));
+  .catch((err) => {
+    console.error("MongoDB connection error:", err);
+    process.exit(1); // Exit the app if connection fails
+  });
+
 
 // Start server
-app.listen(5000, () => {
-  console.log("Server is running on port 5000");
+const PORT = process.env.PORT || 5000; // Use PORT from environment variables or default to 5000
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
