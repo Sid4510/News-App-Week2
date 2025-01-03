@@ -46,31 +46,29 @@ router.post("/login", async (req, res) => {
   }
 
   try {
-    // Find user by email
     const user = await User.findOne({ email });
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // Compare the provided password with the stored hashed password
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
       return res.status(401).json({ message: "Invalid password" });
     }
 
-    // Create a JWT token and include the user's id and name
-    const token = jwt.sign({ id: user._id, name: user.name }, SECRET_KEY, { expiresIn: "1h" });
+    const token = jwt.sign({ id: user._id, name: user.name, role: user.role }, SECRET_KEY, { expiresIn: "1h" });
 
-    // Respond with the token and username
     res.status(200).json({
       message: "Login successful",
       token,
       name: user.name,
+      role: user.role, // Pass role to determine admin or user
     });
   } catch (err) {
     console.error("Error logging in:", err);
     res.status(500).json({ message: "Error logging in" });
   }
 });
+
 
 module.exports = router;

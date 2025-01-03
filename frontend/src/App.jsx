@@ -8,6 +8,7 @@ import SubscribePage from './pages/SubscribePage';
 import { UserProvider } from './context/userContext';
 import MyAccount from './components/MyAccount';
 import NewsDescription from './pages/NewsDescription';
+import AdminDashboard from "./pages/AdminDashborad";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
           <Route path='/subscribe' element={<SubscribePage/>} />
           <Route path='/myaccount' element={<MyAccount/>} />
           <Route path='/news/:slug' element={<NewsDescription/>} />
+          <Route path="/admin-dashboard" element={<AdminDashboard />} />
         </Routes>
       </div>
     </Router>

@@ -14,7 +14,7 @@ const LoginPage = () => {
     e.preventDefault();
     setLoading(true);
     setError("");
-
+  
     try {
       const response = await fetch("http://localhost:5000/api/auth/login", {
         method: "POST",
@@ -22,11 +22,16 @@ const LoginPage = () => {
         body: JSON.stringify({ email, password }),
       });
       const data = await response.json();
-
+  
       if (response.ok) {
-        login(data.token, data.name); // Pass token and name (username)
+        login(data.token, data.name); // Login context update
         alert(`Welcome, ${data.name}!`);
-        navigate("/"); // Redirect to home page
+  
+        if (data.role === "admin") {
+          navigate("/admin-dashboard"); // Redirect admin to a different page
+        } else {
+          navigate("/"); // Redirect normal user to home page
+        }
       } else {
         setError(data.message || "Login failed");
       }
@@ -37,6 +42,7 @@ const LoginPage = () => {
       setLoading(false);
     }
   };
+  
 
   return (
     <div className="flex items-center justify-center h-screen bg-gradient-to-br from-sky-200 via-sky-300 to-white">

@@ -1,5 +1,5 @@
 import { useState, useContext } from "react";
-import { UserContext } from "../context/UserContext"; // Assuming your context is in the right path
+import { UserContext } from "../context/userContext"; // Assuming your context is in the right path
 import { useNavigate } from "react-router-dom";
 import { FaSearch } from "react-icons/fa"; // For search icon
 
@@ -22,10 +22,10 @@ const Navbar = ({ setSearchResults }) => {
     if (query.trim()) {
       try {
         const response = await fetch(
-          `https://newsapi.org/v2/everything?apiKey=a335eff70cd44942a490d63bf0f3bc9a&q=${encodeURIComponent(query)}`
+          `http://localhost:5000/api/news/search?q=${encodeURIComponent(query)}`
         );
         const data = await response.json();
-
+  
         if (response.ok) {
           setSearchResults(data.articles); // Pass search results to HomePage
         } else {
@@ -36,6 +36,7 @@ const Navbar = ({ setSearchResults }) => {
       }
     }
   };
+  
 
   const handleCategoryClick = (category) => {
     setSearchQuery(category); // Set the category as the search query

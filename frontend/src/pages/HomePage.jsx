@@ -12,55 +12,55 @@ const HomePage = () => {
   const [error, setError] = useState(null);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
-  const maxPages = 10;
+  const maxPages = 6;
 
   // Fetch data from NewsAPI
   useEffect(() => {
     if (searchResults) return; // Skip fetching articles if search results are displayed
-
+  
     const fetchArticles = async () => {
       if (loading) return;
-
+  
       setLoading(true);
-
+  
       try {
         if (page > maxPages) {
           return;
         }
-
+  
         const response = await fetch(
-          `https://newsapi.org/v2/top-headlines?apiKey=a335eff70cd44942a490d63bf0f3bc9a&country=us&pageSize=6&page=${page}`
+          `http://localhost:5000/api/news/trending?page=${page}`
         );
         const data = await response.json();
-
+  
         if (response.ok) {
           const articles = data.articles;
-
+  
           setPage((prevPage) => prevPage + 1);
-
+  
           setLeftArticles((prevLeftArticles) => {
             const leftCount = prevLeftArticles.length;
             const rightCount = rightArticles.length;
-
+  
             if (leftCount <= rightCount) {
               return [...prevLeftArticles, ...articles];
             }
-
+  
             return prevLeftArticles;
           });
-
+  
           setRightArticles((prevRightArticles) => {
             const leftCount = leftArticles.length;
             const rightCount = prevRightArticles.length;
-
+  
             if (rightCount < leftCount) {
               return [...prevRightArticles, ...articles];
             }
-
+  
             return prevRightArticles;
           });
         } else {
-          throw new Error(data.message || "Failed to fetch articles");
+          throw new Error(data.message || 'Failed to fetch articles');
         }
       } catch (err) {
         setError(err.message);
@@ -68,9 +68,10 @@ const HomePage = () => {
         setLoading(false);
       }
     };
-
+  
     fetchArticles();
   }, [page, searchResults]);
+  
 
   const fetchData = () => {
     if (!loading && page <= maxPages) {
