@@ -12,7 +12,6 @@ const MyAccount = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Fetch user data on page load
     if (user) {
       axios.get(`/api/user/${user._id}`)
         .then(response => {
@@ -46,14 +45,13 @@ const MyAccount = () => {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="max-w-lg mx-auto bg-white p-6 rounded-lg shadow-md">
-        {/* Profile Header */}
+    
         <div className="flex justify-center mb-6">
           <div className="w-24 h-24 flex items-center justify-center rounded-full bg-gray-200 text-gray-700 text-3xl font-semibold">
             {userData ? userData.name[0].toUpperCase() : "👤"}
           </div>
         </div>
 
-        {/* User Information */}
         <div className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-600">Name</label>
@@ -90,8 +88,6 @@ const MyAccount = () => {
             </p>
           </div>
         </div>
-
-        {/* Edit Profile / Save Changes */}
         <div className="mt-6 flex space-x-4">
           {isEditing ? (
             <>

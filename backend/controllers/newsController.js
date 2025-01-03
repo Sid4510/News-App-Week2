@@ -2,7 +2,7 @@ const axios = require("axios");
 
 const getTrendingNews = async (req, res) => {
   try {
-    const page = parseInt(req.query.page) || 1; // Default to page 1
+    const page = parseInt(req.query.page) || 1;
     const pageSize = 6;
     const apiKey = process.env.NEWS_API_KEY;
     const url = `https://newsapi.org/v2/top-headlines?apiKey=${apiKey}&country=us&pageSize=${pageSize}&page=${page}`;

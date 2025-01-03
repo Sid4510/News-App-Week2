@@ -4,7 +4,6 @@ const Footer = () => {
   return (
     <footer className="bg-gray-100 py-6">
       <div className="container mx-auto px-4">
-        {/* Footer Links */}
         <div className="flex flex-wrap justify-center text-sm text-gray-600 space-x-4">
           <a href="#" className="hover:text-gray-800">© 2024 The Daily News India</a>
           <a href="#" className="hover:text-gray-800">Contact Us</a>

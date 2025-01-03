@@ -7,12 +7,11 @@ const LeftColumn = ({ articles }) => {
   const navigate = useNavigate();
   const [showLoginDialog, setShowLoginDialog] = useState(false);
 
-  // Remove duplicate articles based on title and filter articles without images
   const uniqueArticles = articles
     .filter((article, index, self) => 
-      self.findIndex((a) => a.title === article.title) === index // Remove duplicates based on title
+      self.findIndex((a) => a.title === article.title) === index 
     )
-    .filter((article) => article.urlToImage); // Exclude articles without images
+    .filter((article) => article.urlToImage);
 
   const formatTitleToSlug = (title) => title.replace(/\s+/g, '-').toLowerCase();
 

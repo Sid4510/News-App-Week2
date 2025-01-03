@@ -5,7 +5,7 @@ const newsSchema = new mongoose.Schema({
   description: { type: String, required: true },
   details: { type: String, required: true },
   information: { type: String },
-  imageUrl: { type: String }, // Store Cloudinary image URL
+  imageUrl: { type: String }, 
 }, { timestamps: true });
 
 module.exports = mongoose.model('News', newsSchema);

@@ -1,17 +1,17 @@
 import { useState, useContext } from "react";
-import { UserContext } from "../context/userContext"; // Assuming your context is in the right path
+import { UserContext } from "../context/userContext"; 
 import { useNavigate } from "react-router-dom";
-import { FaSearch } from "react-icons/fa"; // For search icon
+import { FaSearch } from "react-icons/fa"; 
 
 const Navbar = ({ setSearchResults }) => {
   const { user, logout } = useContext(UserContext);
   const navigate = useNavigate();
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState(""); // For search input
+  const [searchQuery, setSearchQuery] = useState(""); 
 
   const handleLogout = () => {
     logout();
-    navigate("/"); // Redirect to login page after logout
+    navigate("/"); 
   };
 
   const toggleDropdown = () => {
@@ -27,7 +27,7 @@ const Navbar = ({ setSearchResults }) => {
         const data = await response.json();
   
         if (response.ok) {
-          setSearchResults(data.articles); // Pass search results to HomePage
+          setSearchResults(data.articles); 
         } else {
           throw new Error(data.message || "Failed to fetch search results");
         }
@@ -39,13 +39,13 @@ const Navbar = ({ setSearchResults }) => {
   
 
   const handleCategoryClick = (category) => {
-    setSearchQuery(category); // Set the category as the search query
-    handleSearch(category); // Perform search automatically for the selected category
+    setSearchQuery(category); 
+    handleSearch(category);
   };
 
   return (
     <nav className="shadow-lg">
-      {/* Top Bar */}
+      
       <div className="container mx-auto px-4 py-2 flex items-center justify-between text-sm text-gray-600">
         <div className="flex items-center space-x-4">
           <span>
@@ -88,15 +88,13 @@ const Navbar = ({ setSearchResults }) => {
         </div>
       </div>
 
-      {/* Main Navbar */}
       <div className="border-t">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          {/* Logo */}
+          
           <div className="text-4xl font-serif font-bold text-gray-900">
             <a href="/">The Daily News India</a>
           </div>
 
-          {/* Navigation Links */}
           <div className="hidden lg:flex items-center space-x-6 text-gray-700 font-medium">
             <button
               className="hover:text-gray-900"
@@ -135,7 +133,6 @@ const Navbar = ({ setSearchResults }) => {
               Sports
             </button>
 
-            {/* Search Bar */}
             <div className="flex items-center w-full max-w-md mx-auto">
               <input
                 type="text"
@@ -145,7 +142,7 @@ const Navbar = ({ setSearchResults }) => {
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
               <button
-                onClick={() => handleSearch(searchQuery)} // Trigger search when clicked
+                onClick={() => handleSearch(searchQuery)} 
                 className="px-4 py-2 bg-blue-700 text-white rounded-r-lg hover:bg-blue-800 focus:ring focus:ring-blue-300"
               >
                 <FaSearch />
@@ -153,7 +150,6 @@ const Navbar = ({ setSearchResults }) => {
             </div>
           </div>
 
-          {/* Action Buttons */}
           <div className="flex items-center space-x-4">
             {!user ? (
               <>
@@ -172,7 +168,7 @@ const Navbar = ({ setSearchResults }) => {
               </>
             ) : (
               <div className="relative">
-                {/* User Avatar */}
+                
                 <div
                   onClick={toggleDropdown}
                   className="w-10 h-10 flex items-center justify-center rounded-full bg-gray-200 text-gray-700 text-lg font-semibold cursor-pointer"
@@ -181,7 +177,6 @@ const Navbar = ({ setSearchResults }) => {
                   {user.username[0].toUpperCase()}
                 </div>
 
-                {/* Dropdown Menu */}
                 {dropdownOpen && (
                   <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-300 rounded shadow-md z-50">
                     <ul className="py-1 text-sm text-gray-700">

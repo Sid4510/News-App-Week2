@@ -14,9 +14,8 @@ const HomePage = () => {
   const [loading, setLoading] = useState(false);
   const maxPages = 6;
 
-  // Fetch data from NewsAPI
   useEffect(() => {
-    if (searchResults) return; // Skip fetching articles if search results are displayed
+    if (searchResults) return; 
   
     const fetchArticles = async () => {
       if (loading) return;
@@ -79,7 +78,6 @@ const HomePage = () => {
     }
   };
 
-  // Distribute search results between columns
   const distributeSearchResults = (results) => {
     const leftResults = [];
     const rightResults = [];

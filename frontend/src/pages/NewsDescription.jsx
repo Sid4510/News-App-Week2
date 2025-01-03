@@ -4,7 +4,7 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 
 const NewsDescription = () => {
-  const { state } = useLocation(); // Access article data passed via state
+  const { state } = useLocation(); 
   const [news, setNews] = useState(null);
   const [error, setError] = useState(null);
 
@@ -18,16 +18,16 @@ const NewsDescription = () => {
         }
 
         const data = await response.json();
-        setNews(data.article); // Set the article data
+        setNews(data.article); 
       } catch (err) {
-        setError(err.message); // Set error if any
+        setError(err.message); 
       }
     };
 
     if (!state?.article) {
       fetchArticle();
     } else {
-      setNews(state.article); // Use the article passed via state if available
+      setNews(state.article); 
     }
   }, [state]);
 

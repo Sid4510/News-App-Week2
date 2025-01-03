@@ -19,7 +19,7 @@ const ProfileEdit = ({ userId }) => {
   const handleSaveProfile = () => {
     axios.put(`/api/user/update/${userId}`, { name, email })
       .then(response => {
-        navigate("/my-account"); // After saving, navigate back to My Account
+        navigate("/my-account");
       })
       .catch(err => console.error("Failed to update user data", err));
   };

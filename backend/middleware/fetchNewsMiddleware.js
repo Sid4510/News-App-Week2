@@ -8,14 +8,13 @@ const fetchNewsMiddleware = async (req, res, next) => {
   }
 
   try {
-    const apiKey = process.env.NEWS_API_KEY; // Ensure the API key is set in your `.env` file
+    const apiKey = process.env.NEWS_API_KEY; 
     const url = `https://newsapi.org/v2/everything?apiKey=${apiKey}&q=${encodeURIComponent(query)}`;
 
     const response = await axios.get(url);
 
-    // Attach the fetched data to the request object
     req.newsData = response.data;
-    next(); // Pass control to the next middleware or route handler
+    next(); 
   } catch (error) {
     console.error("Error fetching data from News API:", error.message);
     res.status(500).json({ message: "Failed to fetch news data" });

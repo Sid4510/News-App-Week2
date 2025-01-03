@@ -1,6 +1,6 @@
 import React from 'react';
+import './App.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import './App.css'; // Tailwind styles should be included here
 import LoginPage from './pages/LoginPage';
 import Signup from './pages/Signup';
 import HomePage from './pages/HomePage';
@@ -15,7 +15,6 @@ function App() {
     <UserProvider>
     <Router>
       <div>
-        {/* Main Content */}
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />

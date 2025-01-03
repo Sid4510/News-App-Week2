@@ -24,13 +24,13 @@ const LoginPage = () => {
       const data = await response.json();
   
       if (response.ok) {
-        login(data.token, data.name); // Login context update
+        login(data.token, data.name); 
         alert(`Welcome, ${data.name}!`);
   
         if (data.role === "admin") {
-          navigate("/admin-dashboard"); // Redirect admin to a different page
+          navigate("/admin-dashboard");
         } else {
-          navigate("/"); // Redirect normal user to home page
+          navigate("/"); 
         }
       } else {
         setError(data.message || "Login failed");

@@ -10,23 +10,21 @@ const LoginDialog = ({ isOpen, onClose }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Simple validation
     if (!email || !password) {
       setError('Please fill in all fields.');
       return;
     }
 
-    // Example login logic (replace with API call)
     if (email === 'user@example.com' && password === 'password123') {
       setError('');
-      onClose(); // Close the dialog
-      navigate('/dashboard'); // Navigate to a protected route
+      onClose(); 
+      navigate('/dashboard'); 
     } else {
       setError('Invalid email or password.');
     }
   };
 
-  if (!isOpen) return null; // Return nothing if dialog is not open
+  if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">

@@ -24,7 +24,7 @@ const Signup = () => {
 
       if (response.ok) {
         alert("Signup successful! Please log in.");
-        navigate("/login"); // Redirect to login page after signup
+        navigate("/login"); 
       } else {
         setError(data.message || "Signup failed");
       }

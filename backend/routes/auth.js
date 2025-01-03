@@ -15,7 +15,6 @@ router.post("/signup", async (req, res) => {
   }
 
   try {
-    // Check if user already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ message: "User with this email already exists" });
@@ -62,7 +61,7 @@ router.post("/login", async (req, res) => {
       message: "Login successful",
       token,
       name: user.name,
-      role: user.role, // Pass role to determine admin or user
+      role: user.role, 
     });
   } catch (err) {
     console.error("Error logging in:", err);
